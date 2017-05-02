@@ -1,0 +1,1 @@
+from .shallowsandbox import app
