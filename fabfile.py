@@ -1,6 +1,6 @@
-###############
-### imports ###
-###############
+"""
+fab commands for shallowsandbox.com
+"""
 
 from fabric.api import cd, env, lcd, put, prompt, local, sudo, run
 from fabric.contrib.files import exists
@@ -10,10 +10,10 @@ from fabric.contrib.files import exists
 ### config ###
 ##############
 
-local_app_dir = '/home/gabe/dev/python/shallowsandbox'
+local_app_dir = '/home/gabe/dev/python/shallowsandbox/shallowsandbox'
 # local_config_dir = './config'
 
-remote_app_dir = '/home/gabe/shallowsandbox'
+remote_app_dir = '/home/gabe/shallowsandbox/shallowsandbox'
 remote_git_dir = '/home/git'
 remote_flask_dir = remote_app_dir + '/shallowsandbox'
 remote_nginx_dir = '/etc/nginx/sites-enabled'
