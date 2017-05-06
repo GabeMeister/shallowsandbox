@@ -1,6 +1,7 @@
 """
 fab commands for shallowsandbox.com
 """
+# pylint: disable=C0103
 
 from fabric.api import cd, env, lcd, put, prompt, local, sudo, run
 from fabric.contrib.files import exists
@@ -13,7 +14,10 @@ from fabric.contrib.files import exists
 local_app_dir = '/home/gabe/dev/python/shallowsandbox/shallowsandbox'
 # local_config_dir = './config'
 
+remote_base_dir = '/home/gabe/shallowsandbox'
+remote_env_dir = remote_base_dir + '/env'
 remote_app_dir = '/home/gabe/shallowsandbox/shallowsandbox'
+remote_pip = remote_env_dir + '/bin/pip'
 remote_git_dir = '/home/git'
 remote_flask_dir = remote_app_dir + '/shallowsandbox'
 remote_nginx_dir = '/etc/nginx/sites-enabled'
@@ -121,12 +125,14 @@ def run_app():
 def deploy():
     """
     1. Copy new Flask files
-    2. Restart gunicorn via supervisor
+    2. Install any new pip requirements
+    3. Restart gunicorn via supervisor
     """
     with cd(remote_app_dir):
         # run('pwd')
         run('ssh-agent bash -c \'ssh-add /home/gabe/deploy_key/deploy_key; git fetch\'')
         run('ssh-agent bash -c \'ssh-add /home/gabe/deploy_key/deploy_key; git pull\'')
+        run(remote_pip + ' install -r requirements.txt')
         sudo('supervisorctl restart shallowsandbox')
 
 
