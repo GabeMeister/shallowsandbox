@@ -1,3 +1,0 @@
-graft shallowsandbox/templates
-graft shallowsandbox/static
-include shallowsandbox/schema.sql
