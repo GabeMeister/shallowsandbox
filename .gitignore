@@ -99,3 +99,7 @@ ENV/
 
 # vscode directory
 .vscode/
+
+# shallowsandbox specific files
+shallowsandbox_app/config.py
+shallowsandbox_app/shallowsandbox.db
