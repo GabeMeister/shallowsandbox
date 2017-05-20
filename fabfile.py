@@ -1,32 +1,33 @@
-"""
-fab commands for shallowsandbox.com
-"""
+""" fab commands for shallowsandbox.com """
+
 # pylint: disable=C0103
 
-from fabric.api import cd, env, lcd, put, prompt, local, sudo, run
-from fabric.contrib.files import exists
+from fabric.api import cd, env, sudo, run, put
+# lcd, prompt, local
+# from fabric.contrib.files import exists
 
 
 ##############
 ### config ###
 ##############
 
-local_app_dir = '/home/gabe/dev/python/shallowsandbox/shallowsandbox'
-# local_config_dir = './config'
+local_base_dir = '/home/gabe/dev/python/shallowsandbox'
+local_git_dir = local_base_dir + '/shallowsandbox'
+local_app_dir = local_git_dir + '/shallowsandbox_app'
 
 remote_base_dir = '/home/gabe/shallowsandbox'
 remote_env_dir = remote_base_dir + '/env'
-remote_app_dir = '/home/gabe/shallowsandbox/shallowsandbox'
-remote_pip = remote_env_dir + '/bin/pip'
-remote_git_dir = '/home/git'
-remote_flask_dir = remote_app_dir + '/shallowsandbox'
+remote_git_dir = remote_base_dir + '/shallowsandbox'
+remote_app_dir = remote_git_dir + '/shallowsandbox_app'
+
 remote_nginx_dir = '/etc/nginx/sites-enabled'
 remote_supervisor_dir = '/etc/supervisor/conf.d'
+
+remote_pip = remote_env_dir + '/bin/pip'
 
 env.hosts = ['104.236.163.200']  # replace with IP address or hostname
 env.user = 'gabe'
 env.key_filename = '/home/gabe/servers/prod/ssh_keys/prod_key'
-# env.password = 'blah!'
 
 
 #############
@@ -35,16 +36,25 @@ env.key_filename = '/home/gabe/servers/prod/ssh_keys/prod_key'
 
 def deploy():
     """
-    1. Copy new Flask files
+    1. Git fetch and pull on remote repo
     2. Install any new pip requirements
     3. Restart gunicorn via supervisor
     """
-    with cd(remote_app_dir):
-        # run('pwd')
+    with cd(remote_git_dir):
         run('ssh-agent bash -c \'ssh-add /home/gabe/deploy_key/deploy_key; git fetch\'')
         run('ssh-agent bash -c \'ssh-add /home/gabe/deploy_key/deploy_key; git pull\'')
         run(remote_pip + ' install -r requirements.txt')
         sudo('supervisorctl restart shallowsandbox')
+
+
+def deploy_config():
+    """ Copy the config.py file (which isn't in source control) to remote """
+    put(local_app_dir + '/config.py', remote_app_dir + '/config.py')
+
+def deploy_db():
+    """ Copy the sqlite db file (which isn't in source control) to remote """
+    put(local_app_dir + '/shallowsandbox.db', remote_app_dir + '/shallowsandbox.db')
+
 
 # def install_requirements():
 #     """ Install required packages. """
