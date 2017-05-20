@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    {% if current_user.is_authenticated %}
+        <h1>Welcome {{ name }}!</h1>
+        <h1>This is super secret content only for logged in users</h1>
+    {% else %}
+        <h1>Welcome! Please sign up or log in to see content</h1>
+    {% endif %}
+
+{% endblock %}

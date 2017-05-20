@@ -1,0 +1,36 @@
+<html>
+
+<head>
+    <link rel="stylesheet" href="/static/css/styling.css">
+    <title>Shallow Sandbox</title>
+</head>
+
+<body>
+
+    <span>Menu:</span>
+    <a href="/index">Home</a>
+    {% if current_user.is_authenticated %}
+        <a href="/logout">Log Out</a>
+    {% else %}
+        <a href="/login">Log In</a>
+        <a href="/signup">Sign Up</a>
+    {% endif %}
+
+
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <ul>
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+
+
+    {% block content %}
+    {% endblock %}
+
+</body>
+
+</html>
