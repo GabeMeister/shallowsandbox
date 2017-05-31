@@ -12,11 +12,11 @@ from werkzeug.security import check_password_hash
 class LoginForm(FlaskForm):
     username = StringField('Username:', validators=[
         InputRequired(message='Please enter a unique username'),
-        Length(min=4, max=15, message='Username must be between 4 and 15 characters long')
+        Length(min=4, max=20, message='Username must be between 4 and 20 characters long')
     ])
     password = PasswordField('Password:', validators=[
         InputRequired(message='Please enter a password'),
-        Length(min=8, max=80, message='Password must be between 8 and 80 characters long')
+        Length(min=8, max=50, message='Password must be between 8 and 50 characters long')
     ])
     remember_me = BooleanField('Remember Me')
     submit = SubmitField('Submit')
@@ -44,19 +44,21 @@ class LoginForm(FlaskForm):
 class RegisterForm(FlaskForm):
     email = StringField('Email:', validators=[
         InputRequired(message='Please enter a valid email'),
+        Length(min=4, max=150, message='Email must be between 4 and 150 characters long'),
         Email(message='Enter a valid email')
     ])
     username = StringField('Username:', validators=[
         InputRequired(message='Please enter a unique username'),
-        Length(min=4, max=15, message='Username must be between 4 and 15 characters long')
+        Length(min=4, max=20, message='Username must be between 4 and 20 characters long')
     ])
     password = PasswordField('Password:', validators=[
         InputRequired(message='Please enter a password'),
-        Length(min=8, max=80, message='Password must be between 8 and 80 characters long')
+        Length(min=8, max=50, message='Password must be between 8 and 50 characters long')
     ])
     confirm_password = PasswordField('Confirm Password:', validators=[
         InputRequired('Please confirm password'),
-        Length(min=8, max=80),
+        Length(min=8, max=50, message='Confirmed password must be between 8 and 50 '+\
+            'characters long'),
         EqualTo(fieldname='password', message='Passwords must match')
     ])
     submit = SubmitField('Submit')

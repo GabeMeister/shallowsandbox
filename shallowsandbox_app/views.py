@@ -13,7 +13,9 @@ from werkzeug.security import generate_password_hash
 @app.route('/')
 @app.route('/index')
 def index():
-    name = current_user.username if current_user.is_authenticated else ''
+    name = ''
+    if current_user.is_authenticated:
+        name = current_user.username
     return render_template('index.html', name=name)
 
 
