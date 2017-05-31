@@ -1,8 +1,8 @@
 """ fab commands for shallowsandbox.com """
 
-# pylint: disable=C0103
+# pylint: disable=C0103,E1129
 
-from fabric.api import cd, env, sudo, run, put
+from fabric.api import cd, env, sudo, run, put, get
 # lcd, prompt, local
 # from fabric.contrib.files import exists
 
@@ -48,12 +48,16 @@ def deploy():
 
 
 def deploy_config():
-    """ Copy the config.py file (which isn't in source control) to remote """
+    """ Copy the local config.py file (which isn't in source control) to remote """
     put(local_app_dir + '/config.py', remote_app_dir + '/config.py')
 
 def deploy_db():
-    """ Copy the sqlite db file (which isn't in source control) to remote """
+    """ Copy the local sqlite db file (which isn't in source control) to remote """
     put(local_app_dir + '/shallowsandbox.db', remote_app_dir + '/shallowsandbox.db')
+
+def copy_db():
+    """ Copy the remote sqlite db file (which isn't in source control) to local """
+    get(remote_app_dir + '/shallowsandbox.db', local_app_dir + '/shallowsandbox.db')
 
 
 # def install_requirements():
