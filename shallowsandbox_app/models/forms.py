@@ -4,7 +4,7 @@
 
 from shallowsandbox_app.models.user import User
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField
 from wtforms.validators import InputRequired, Length, Email, EqualTo
 from werkzeug.security import check_password_hash
 
@@ -82,3 +82,12 @@ class RegisterForm(FlaskForm):
             return False
 
         return True
+
+
+class NewPostForm(FlaskForm):
+    question = TextAreaField('Question:', validators=[
+        InputRequired(message='Please enter a question')
+    ])
+    answer = TextAreaField('Answer:', validators=[
+        InputRequired(message='Please enter an answer')
+    ])

@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block head_scripts %}
+
+    {% if current_user.is_authenticated %}
+        <script type="text/x-mathjax-config">
+            MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+        </script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+        <script src="/static/js/mathjax.js"></script>
+    {% endif %}
+
+{% endblock %}
+
+
+{% block content %}
+
+    <form action="/newpost" method="post">
+        {{ form.hidden_tag() }}
+
+        <h1>Create a New Post:</h1>
+
+        {{ form.question.label }}<br>
+        {% for error in form.question.errors %}
+            <span>{{ error }}</span>
+            <br>
+        {% endfor %}
+        {{ form.question(cols="50", rows="10", class="mathjax-textarea-input") }}
+        <br>
+        <br>
+
+        {{ form.answer.label }}<br>
+        {% for error in form.answer.errors %}
+            <span>{{ error }}</span>
+            <br>
+        {% endfor %}
+        {{ form.answer(cols="50", rows="10", class="mathjax-textarea-input") }}
+
+        <p>Preview:</p>
+        <div id="mathjax-preview" style="border:1px solid; padding: 3px; width:40%; margin-top:5px"></div>
+        <div id="mathjax-buffer" style="border:1px solid; padding: 3px; width:40%; margin-top:5px; visibility:hidden; position:absolute; top:0; left: 0"></div>
+
+        <br>
+        <input type='submit' value='Submit!'/>
+    </form>
+
+
+
+
+{% endblock %}
+
+{% block body_scripts %}
+    <script>
+        Preview.Init();
+
+        $('#answer').keyup(function() {
+            Preview.Update();
+        });
+    </script>
+{% endblock %}

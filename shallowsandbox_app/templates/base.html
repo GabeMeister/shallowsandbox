@@ -5,7 +5,7 @@
     <link rel="stylesheet" href="/static/css/styling.css"/>
     <link rel="shortcut icon" href="/static/img/favicon.ico"/>
 
-    {% block page_scripts %}
+    {% block head_scripts %}
     {% endblock %}
 </head>
 
@@ -20,21 +20,12 @@
         <a href="/signup">Sign Up</a>
     {% endif %}
 
-
-    {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            <ul>
-                {% for message in messages %}
-                    <li>{{ message }}</li>
-                {% endfor %}
-            </ul>
-        {% endif %}
-    {% endwith %}
-
-
     {% block content %}
     {% endblock %}
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+    {% block body_scripts %}
+    {% endblock %}
 </body>
 
 </html>

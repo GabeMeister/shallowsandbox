@@ -2,11 +2,13 @@
 
 # pylint: disable=C0103,C0111,E1101
 
+from datetime import datetime
 from flask import render_template, redirect
 from flask_login import login_required, login_user, logout_user, current_user
 from shallowsandbox_app import app, db
-from shallowsandbox_app.models.forms import LoginForm, RegisterForm
+from shallowsandbox_app.models.forms import LoginForm, RegisterForm, NewPostForm
 from shallowsandbox_app.models.user import User
+from shallowsandbox_app.models.post import Post
 from werkzeug.security import generate_password_hash
 
 
@@ -14,9 +16,11 @@ from werkzeug.security import generate_password_hash
 @app.route('/index')
 def index():
     name = ''
+    posts = []
     if current_user.is_authenticated:
         name = current_user.username
-    return render_template('index.html', name=name)
+        posts = Post.query.all()
+    return render_template('index.html', name=name, posts=posts)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -47,3 +51,27 @@ def signup():
 def logout():
     logout_user()
     return redirect('/')
+
+@app.route('/newpost', methods=['GET', 'POST'])
+@login_required
+def new_post():
+    form = NewPostForm()
+    if form.validate_on_submit():
+        now = datetime.now()
+        post = Post(question=form.question.data,\
+                    answer=form.answer.data,\
+                    creation_date=now,\
+                    last_edit_date=now,\
+                    user=current_user)
+        db.session.add(post)
+        db.session.commit()
+
+        test_post = Post.query.filter_by(creation_date=now).first()
+        print test_post
+        if test_post.answer == post.answer:
+            print 'they match!'
+        else:
+            print 'nope nope nope'
+
+        return redirect('/')
+    return render_template('newpost.html', form=form)
