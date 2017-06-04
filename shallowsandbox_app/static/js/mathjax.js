@@ -1,18 +1,26 @@
 var Preview = {
     delay: 150,        // delay after keystroke before updating
-    preview: null,     // filled in by Init below
-    buffer: null,      // filled in by Init below
+    questionPreview: null,     // filled in by Init below
+    answerPreview: null,     // filled in by Init below
+    questionBuffer: null,      // filled in by Init below
+    answerBuffer: null,      // filled in by Init below
     timeout: null,     // store setTimout id
     mjRunning: false,  // true when MathJax is processing
     mjPending: false,  // true when a typeset has been queued
-    oldText: null,     // used to check if an update is needed
+    oldAnswerText: null,     // used to check if an update is needed
+    oldQuestionText: null,
     //
     //  Get the preview and buffer DIV's
     //
     Init: function () {
-        this.preview = document.getElementById("mathjax-preview");
-        this.buffer = document.getElementById("mathjax-buffer");
+        this.questionPreview = document.getElementById("mathjax-question-preview");
+        this.questionBuffer = document.getElementById("mathjax-question-buffer");
+
+        this.answerPreview = document.getElementById("mathjax-answer-preview");
+        this.answerBuffer = document.getElementById("mathjax-answer-buffer");
+
         document.getElementById("answer").value = '';
+        document.getElementById("question").value = '';
     },
     //
     //  Switch the buffer and preview, and display the right one.
@@ -20,10 +28,25 @@ var Preview = {
     //  the results of running MathJax are more accurate that way.)
     //
     SwapBuffers: function () {
-        var buffer = this.preview, preview = this.buffer;
-        this.buffer = buffer; this.preview = preview;
-        buffer.style.visibility = "hidden"; buffer.style.position = "absolute";
-        preview.style.position = ""; preview.style.visibility = "";
+        // The question buffer
+        var tempQuestionBuffer = this.questionPreview;
+        var tempQuestionPreview = this.questionBuffer;
+        this.questionBuffer = tempQuestionBuffer;
+        this.questionPreview = tempQuestionPreview;
+        tempQuestionBuffer.style.visibility = "hidden";
+        tempQuestionBuffer.style.position = "absolute";
+        tempQuestionPreview.style.position = "";
+        tempQuestionPreview.style.visibility = "";
+
+        // The answer buffer
+        var tempAnswerBuffer = this.answerPreview;
+        var tempAnswerPreview = this.answerBuffer;
+        this.answerBuffer = tempAnswerBuffer;
+        this.answerPreview = tempAnswerPreview;
+        tempAnswerBuffer.style.visibility = "hidden";
+        tempAnswerBuffer.style.position = "absolute";
+        tempAnswerPreview.style.position = "";
+        tempAnswerPreview.style.visibility = "";
     },
     //
     //  This gets called when a key is pressed in the textarea.
@@ -46,19 +69,35 @@ var Preview = {
     //
     CreatePreview: function () {
         Preview.timeout = null;
-        if (this.mjPending) return;
-        var text = document.getElementById("answer").value;
-        if (text === this.oldtext) return;
+        if (this.mjPending) {
+            return;
+        }
+
+        // Update the answer
+        var answerText = document.getElementById("answer").value;
+        var questionText = document.getElementById("question").value;
+
+        if (answerText === this.oldAnswerText && questionText === this.oldQuestionText) {
+            return;
+        }
+
         if (this.mjRunning) {
             this.mjPending = true;
             MathJax.Hub.Queue(["CreatePreview", this]);
-        } else {
-            this.buffer.innerHTML = this.oldtext = text;
+        }
+        else {
+            this.answerBuffer.innerHTML = this.oldAnswerText = answerText;
+            this.questionBuffer.innerHTML = this.oldQuestionText = questionText;
             this.mjRunning = true;
             MathJax.Hub.Queue(
-                ["Typeset", MathJax.Hub, this.buffer],
+                ["Typeset", MathJax.Hub, this.questionBuffer],
+                ["Typeset", MathJax.Hub, this.answerBuffer],
                 ["PreviewDone", this]
             );
+            // MathJax.Hub.Queue(
+            //     ["Typeset", MathJax.Hub, this.questionBuffer],
+            //     ["PreviewDone", this]
+            // );
         }
     },
     //
