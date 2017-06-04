@@ -19,12 +19,16 @@
     {% else %}
 
         <h1>Welcome {{ name }}!</h1>
-        <a href="/newpost">Create new post</a>
+        <a href="/newpost">New Post</a>
 
         <ul>
             {% for post in posts %}
-                <li>{{ post.question }}</li>
-                <div>{{ post.answer }}</div>
+                <div class="post">
+                    <span>Q: {{ post.question }}</span>
+                    <div>A: {{ post.answer }}</div>
+                    <a href="/editpost">Edit</a>
+                    <a href="/deletepost">Delete</a>
+                </div>
         {% endfor %}
         </ul>
 

@@ -75,3 +75,14 @@ def new_post():
 
         return redirect('/')
     return render_template('newpost.html', form=form)
+
+@app.route('/editpost')
+@login_required
+def edit_post():
+    pass
+
+
+@app.route('/deletepost')
+@login_required
+def delete_post():
+    pass

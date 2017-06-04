@@ -11,17 +11,19 @@
 
 <body>
 
-    <span>Menu:</span>
-    <a href="/index">Home</a>
-    {% if current_user.is_authenticated %}
-        <a href="/logout">Log Out</a>
-    {% else %}
-        <a href="/login">Log In</a>
-        <a href="/signup">Sign Up</a>
-    {% endif %}
+    <div class="body-content">
+        <span>Menu:</span>
+        <a href="/index">Home</a>
+        {% if current_user.is_authenticated %}
+            <a href="/logout">Log Out</a>
+        {% else %}
+            <a href="/login">Log In</a>
+            <a href="/signup">Sign Up</a>
+        {% endif %}
 
-    {% block content %}
-    {% endblock %}
+        {% block content %}
+        {% endblock %}
+    </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
     {% block body_scripts %}
