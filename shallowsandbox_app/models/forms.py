@@ -91,3 +91,11 @@ class NewPostForm(FlaskForm):
     answer = TextAreaField('Answer:', validators=[
         InputRequired(message='Please enter an answer')
     ])
+
+class EditPostForm(FlaskForm):
+    question = TextAreaField('Edit Question:', validators=[
+        InputRequired(message='Please enter a question')
+    ])
+    answer = TextAreaField('Edit Answer:', validators=[
+        InputRequired(message='Please enter an answer')
+    ])

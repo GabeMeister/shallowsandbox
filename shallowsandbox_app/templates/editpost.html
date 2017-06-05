@@ -15,16 +15,17 @@
 
 {% block content %}
 
-    <form action="/newpost" method="post">
+    <form action="/editpost/{{ post.id }}" method="post">
         {{ form.hidden_tag() }}
 
-        <h1>Create a New Post:</h1>
+        <h1>Edit Post:</h1>
 
         {{ form.question.label }}<br>
         {% for error in form.question.errors %}
             <span>{{ error }}</span>
             <br>
         {% endfor %}
+        <!--<span>{{ form.question }}</span>-->
         {{ form.question(cols="50", rows="10", class="mathjax-textarea-input") }}
         <br>
         <br>
@@ -56,7 +57,7 @@
 
 {% block body_scripts %}
     <script>
-        Preview.Init(true);
+        Preview.Init();
 
         $('#question').keyup(function() {
             Preview.Update();

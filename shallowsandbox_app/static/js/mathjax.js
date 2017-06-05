@@ -12,15 +12,19 @@ var Preview = {
     //
     //  Get the preview and buffer DIV's
     //
-    Init: function () {
+    Init: function (clearValues=false) {
         this.questionPreview = document.getElementById("mathjax-question-preview");
         this.questionBuffer = document.getElementById("mathjax-question-buffer");
 
         this.answerPreview = document.getElementById("mathjax-answer-preview");
         this.answerBuffer = document.getElementById("mathjax-answer-buffer");
 
-        document.getElementById("answer").value = '';
-        document.getElementById("question").value = '';
+        if (clearValues) {
+            document.getElementById("answer").value = '';
+            document.getElementById("question").value = '';
+        }
+
+        this.Update();
     },
     //
     //  Switch the buffer and preview, and display the right one.
