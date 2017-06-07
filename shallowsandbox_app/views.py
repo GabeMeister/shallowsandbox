@@ -98,7 +98,15 @@ def edit_post(post_id):
     return render_template('editpost.html', form=form, post=post)
 
 
-@app.route('/deletepost')
+@app.route('/deletepost/<post_id>')
 @login_required
-def delete_post():
+def delete_post(post_id):
+    post = Post.query.filter_by(id=post_id).first()
+    if post is None:
+        # Redirect to home page if we didn't find the correct post
+        return redirect('/')
+
+    db.session.delete(post)
+    db.session.commit()
+
     return redirect('/')

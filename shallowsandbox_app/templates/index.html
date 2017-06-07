@@ -27,7 +27,7 @@
                 <span>Q: {{ post.question }}</span>
                 <div>A: {{ post.answer }}</div>
                 <a href="/editpost/{{ post.id }}">Edit</a>
-                <!--<a href="/deletepost/{{ post.id }}">Delete</a>-->
+                <a href="/deletepost/{{ post.id }}" class="confirm-link-click">Delete</a>
             </div>
         {% endfor %}
 
@@ -39,7 +39,8 @@
 
     {% endif %}
 
+{% endblock %}
 
-
-
+{% block body_scripts %}
+    <script src="/static/js/script.js"></script>
 {% endblock %}

@@ -98,10 +98,6 @@ var Preview = {
                 ["Typeset", MathJax.Hub, this.answerBuffer],
                 ["PreviewDone", this]
             );
-            // MathJax.Hub.Queue(
-            //     ["Typeset", MathJax.Hub, this.questionBuffer],
-            //     ["PreviewDone", this]
-            // );
         }
     },
     //
