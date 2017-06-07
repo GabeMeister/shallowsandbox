@@ -26,7 +26,7 @@
             <br>
         {% endfor %}
         <!--<span>{{ form.question }}</span>-->
-        {{ form.question(cols="50", rows="10", class="mathjax-textarea-input") }}
+        {{ form.question(rows="3", class="mathjax-textarea-input") }}
         <br>
         <br>
 
@@ -35,15 +35,15 @@
             <span>{{ error }}</span>
             <br>
         {% endfor %}
-        {{ form.answer(cols="50", rows="10", class="mathjax-textarea-input") }}
+        {{ form.answer(rows="10", class="mathjax-textarea-input") }}
 
         <p>Preview:</p>
 
-        <div id="mathjax-question-preview" style="border:1px solid; padding: 3px; width:40%; margin-top:5px"></div>
-        <div id="mathjax-question-buffer" style="border:1px solid; padding: 3px; width:40%; margin-top:5px; visibility:hidden; position:absolute; top:0; left: 0"></div>
+        <div id="mathjax-question-preview" style="border:1px solid; padding: 3px; margin-top:5px"></div>
+        <div id="mathjax-question-buffer" style="border:1px solid; padding: 3px; margin-top:5px; visibility:hidden; position:absolute; top:0; left: 0"></div>
 
-        <div id="mathjax-answer-preview" style="border:1px solid; padding: 3px; width:40%; margin-top:5px"></div>
-        <div id="mathjax-answer-buffer" style="border:1px solid; padding: 3px; width:40%; margin-top:5px; visibility:hidden; position:absolute; top:0; left: 0"></div>
+        <div id="mathjax-answer-preview" style="border:1px solid; padding: 3px; margin-top:5px"></div>
+        <div id="mathjax-answer-buffer" style="border:1px solid; padding: 3px; margin-top:5px; visibility:hidden; position:absolute; top:0; left: 0"></div>
 
 
         <br>
