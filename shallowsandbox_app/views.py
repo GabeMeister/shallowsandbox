@@ -52,6 +52,7 @@ def logout():
     logout_user()
     return redirect('/')
 
+
 @app.route('/newpost', methods=['GET', 'POST'])
 @login_required
 def new_post():
@@ -68,6 +69,7 @@ def new_post():
 
         return redirect('/')
     return render_template('newpost.html', form=form)
+
 
 @app.route('/editpost/<post_id>', methods=['GET', 'POST'])
 @login_required
