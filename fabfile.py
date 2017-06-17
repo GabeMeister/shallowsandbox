@@ -51,6 +51,10 @@ def deploy_config():
     """ Copy the local config.py file (which isn't in source control) to remote """
     put(local_app_dir + '/config.py', remote_app_dir + '/config.py')
 
+def copy_config():
+    """ Copy the remote config.py file (which isn't in source control) to local """
+    get(remote_app_dir + '/config.py', local_app_dir + '/config.py')
+
 def deploy_db():
     """ Copy the local sqlite db file (which isn't in source control) to remote """
     put(local_app_dir + '/shallowsandbox.db', remote_app_dir + '/shallowsandbox.db')
