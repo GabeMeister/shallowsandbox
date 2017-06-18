@@ -34,9 +34,11 @@ Answer {1}""".format(self.question, self.answer)
 Answer: {1}
 Created: {2}
 Last Edited: {3}
-User: {4}""".format(self.question,
+User: {4}
+Homework: {5}""".format(self.question,
                     self.answer,
                     self.creation_date,
                     self.last_edit_date,
-                    self.user)
+                    self.user,
+                    self.homework)
 

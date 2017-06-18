@@ -13,26 +13,26 @@ manager = Manager(app)
 
 @manager.command
 def select():
-    # posts = Post.query.all()
-    # for post in posts:
-    #     print post.info() + '\n'
+    posts = Post.query.all()
+    for post in posts:
+        print post.info() + '\n'
 
     # users = User.query.all()
     # for user in users:
-    #     print user.info() + '\n'
+    #     print user.info() + '\n'homeworks
 
-    homeworks = Homework.query.all()
-    for hw in homeworks:
-        print hw.info() + '\n'
+    # homeworks = Homework.query.all()
+    # for hw in homeworks:
+    #     print hw.info() + '\n'
 
 
 @manager.command
 def insert():
     user = User.query.first()
-    hw = Homework(title='mastering physics day 6')
+    hw = Homework.query.first()
     now = datetime.now()
-    post = Post(question='this is another post',
-                answer='yet ANOTHER answer',
+    post = Post(question='question 41',
+                answer='answer 41',
                 creation_date=now,
                 last_edit_date=now,
                 user=user,

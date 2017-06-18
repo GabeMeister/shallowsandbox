@@ -11,9 +11,10 @@ app.config.from_pyfile('config.py')
 # The database
 from flask_sqlalchemy import SQLAlchemy
 db = SQLAlchemy(app)
-from shallowsandbox_app.models.user import User
 from shallowsandbox_app.models.post import Post
+from shallowsandbox_app.models.user import User
 from shallowsandbox_app.models.homework import Homework
+from shallowsandbox_app.models.course import Course
 
 
 # The login manager

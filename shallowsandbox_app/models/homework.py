@@ -3,12 +3,15 @@
 # pylint: disable=C0103,C0111,C0413,E1101
 
 from shallowsandbox_app import db
+from sqlalchemy import ForeignKey
 from sqlalchemy.orm import relationship
 
 class Homework(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(100), unique=True, nullable=False)
+    title = db.Column(db.String(100), nullable=False)
     posts = relationship('Post', back_populates='homework')
+    course_id = db.Column(db.Integer, ForeignKey('course.id'))
+    course = relationship('Course', back_populates='homeworks')
 
 
     def __str__(self):
@@ -16,9 +19,9 @@ class Homework(db.Model):
 
 
     def info(self):
-        buf = self.title
+        buf = self.title + '\n'
         buf += 'Posts:\n'
         for post in self.posts:
-            buf += str(post)
+            buf += str(post) + '\n'
 
         return buf
