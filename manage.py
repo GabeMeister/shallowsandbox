@@ -2,12 +2,12 @@
 
 # pylint: disable=C0103,C0111,E1101
 
+from datetime import datetime
 from flask_script import Manager
 from shallowsandbox_app import app, db
 from shallowsandbox_app.models.post import Post
 from shallowsandbox_app.models.user import User
 from shallowsandbox_app.models.homework import Homework
-from datetime import datetime
 
 manager = Manager(app)
 
