@@ -15,6 +15,7 @@ from shallowsandbox_app.models.post import Post
 from shallowsandbox_app.models.user import User
 from shallowsandbox_app.models.homework import Homework
 from shallowsandbox_app.models.course import Course
+from shallowsandbox_app.models.school import School
 
 
 # The login manager
