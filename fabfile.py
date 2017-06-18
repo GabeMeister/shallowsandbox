@@ -24,6 +24,7 @@ remote_nginx_dir = '/etc/nginx/sites-enabled'
 remote_supervisor_dir = '/etc/supervisor/conf.d'
 
 remote_pip = remote_env_dir + '/bin/pip'
+remote_alembic = remote_env_dir + '/bin/alembic'
 
 env.hosts = ['104.236.163.200']  # replace with IP address or hostname
 env.user = 'gabe'
@@ -44,6 +45,7 @@ def deploy():
         run('ssh-agent bash -c \'ssh-add /home/gabe/deploy_key/deploy_key; git fetch\'')
         run('ssh-agent bash -c \'ssh-add /home/gabe/deploy_key/deploy_key; git pull\'')
         run(remote_pip + ' install -r requirements.txt')
+        upgrade_alembic_head()
         sudo('supervisorctl restart shallowsandbox')
 
 
@@ -51,17 +53,38 @@ def deploy_config():
     """ Copy the local config.py file (which isn't in source control) to remote """
     put(local_app_dir + '/config.py', remote_app_dir + '/config.py')
 
+
 def copy_config():
     """ Copy the remote config.py file (which isn't in source control) to local """
     get(remote_app_dir + '/config.py', local_app_dir + '/config.py')
+
 
 def deploy_db():
     """ Copy the local sqlite db file (which isn't in source control) to remote """
     put(local_app_dir + '/shallowsandbox.db', remote_app_dir + '/shallowsandbox.db')
 
+
 def copy_db():
     """ Copy the remote sqlite db file (which isn't in source control) to local """
     get(remote_app_dir + '/shallowsandbox.db', local_app_dir + '/shallowsandbox.db')
+
+
+def upgrade_alembic_head():
+    """ Upgrade database structure to the latest alembic revision """
+    with cd(remote_app_dir):
+        run(remote_alembic + ' upgrade head')
+
+
+def upgrade_alembic():
+    """ Perform one alembic upgrade """
+    with cd(remote_app_dir):
+        run(remote_alembic + ' upgrade +1')
+
+
+def downgrade_alembic():
+    """ Perform one alembic downgrade """
+    with cd(remote_app_dir):
+        run(remote_alembic + ' downgrade -1')
 
 
 # def install_requirements():
