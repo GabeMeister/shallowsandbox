@@ -5,6 +5,7 @@
 from shallowsandbox_app import db
 from sqlalchemy.orm import relationship
 
+
 class Course(db.Model):
     id = db.Column('id', db.Integer, primary_key=True)
     subject = db.Column('subject', db.String(100), nullable=False)
