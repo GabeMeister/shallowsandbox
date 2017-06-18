@@ -20,9 +20,9 @@ def select():
     # for post in posts:
     #     print post.info() + '\n'
 
-    # users = User.query.all()
-    # for user in users:
-    #     print user.info() + '\n'homeworks
+    users = User.query.all()
+    for user in users:
+        print user.info() + '\n'
 
     # homeworks = Homework.query.all()
     # for hw in homeworks:
@@ -32,9 +32,9 @@ def select():
     # for course in courses:
     #     print course.info() + '\n'
 
-    schools = School.query.all()
-    for school in schools:
-        print school.info() + '\n'
+    # schools = School.query.all()
+    # for school in schools:
+    #     print school.info() + '\n'
 
 
 @manager.command

@@ -12,6 +12,7 @@ class User(db.Model, UserMixin):
     username = db.Column(db.String(20), unique=True, nullable=False)
     email = db.Column(db.String(150), unique=True, nullable=False)
     password = db.Column(db.String(50), nullable=False)
+    is_admin = db.Column('is_admin', db.Integer, server_default='0')
     posts = relationship('Post', back_populates='user')
 
 
@@ -20,10 +21,11 @@ class User(db.Model, UserMixin):
 
 
     def info(self):
-        buf = "Username: {0}\n".format(self.username)
+        buf = """Username: {0}
+Email: {1}
+Admin: {2}
+""".format(self.username, self.email, self.is_admin)
         buf += 'Posts:\n'
         for post in self.posts:
             buf += post.question + ' ' + post.answer + '\n'
         return buf
-
-
