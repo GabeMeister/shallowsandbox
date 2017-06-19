@@ -1,7 +1,8 @@
 """ flask scripts """
 
-# pylint: disable=C0103,C0111,E1101,W0401
+# pylint: disable=C0103,C0111,E1101,W0401,C0301
 
+import csv
 from datetime import datetime, timedelta
 from flask_script import Manager
 from shallowsandbox_app import app, db
@@ -39,9 +40,20 @@ def select():
 
 @manager.command
 def insert():
-    hw = Homework.query.first()
-    hw.due_date = datetime.now().today() + timedelta(days=2)
+    college_file_path = '/home/gabe/dev/python/college-generator/college-generator/Accreditation_04_2017.csv'
+
+    colleges = set()
+    with open(college_file_path, 'rb') as csvfile:
+        reader = csv.reader(csvfile, delimiter=',', quotechar='"')
+        for row in reader:
+            colleges.add(row[1])
+
+    for college_name in colleges:
+        new_school = School(full_name=college_name)
+        db.session.add(new_school)
+
     db.session.commit()
+
     print 'Done!'
 
 
