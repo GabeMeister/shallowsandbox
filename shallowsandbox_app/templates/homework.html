@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<a href="/newpost">New Post</a>
+
+{% for post in posts %}
+    <div class="post">
+        <span>Q: {{ post.question }}</span>
+        <div>A: {{ post.answer }}</div>
+        <a href="/editpost/{{ post.id }}">Edit</a>
+        <a href="/deletepost/{{ post.id }}" class="confirm-link-click">Delete</a>
+    </div>
+{% endfor %}
+
+{% endblock %}

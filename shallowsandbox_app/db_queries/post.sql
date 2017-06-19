@@ -1,10 +1,16 @@
 select * from user;
 
+update user set is_admin=1 where id=1;
+
 select * from post;
 delete from post where id in (11);
 
 
 select * from homework;
+
+select * from school where id=1657;
+
+select * from course;
 
 
 
