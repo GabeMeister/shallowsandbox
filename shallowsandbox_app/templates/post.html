@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block head_scripts %}
+
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+    </script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <script src="/static/js/mathjax.js"></script>
+
+{% endblock %}
+
+{% block content %}
+
+    <div class="post">
+        <span>Q: {{ post.question }}</span><br>
+        <span>A: {{ post.answer }}</span><br>
+    </div>
+
+{% endblock %}

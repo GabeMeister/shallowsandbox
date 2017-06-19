@@ -141,6 +141,30 @@ def course(course_id):
         # Redirect to home page if we couldn't find the correct course
         return redirect('/')
 
-    print selected_course.homeworks
-
     return render_template('course.html', homeworks=selected_course.homeworks)
+
+@app.route('/homework/<homework_id>')
+def homework(homework_id):
+    if not homework_id.isdigit():
+        # Redirect to home page if garbage input
+        return redirect('/')
+
+    selected_homework = Homework.query.filter_by(id=homework_id).first()
+    if selected_homework is None:
+        # Redirect to home page if we couldn't find the correct homework
+        return redirect('/')
+
+    return render_template('homework.html', posts=selected_homework.posts)
+
+@app.route('/post/<post_id>')
+def post(post_id):
+    if not post_id.isdigit():
+        # Redirect to home page if garbage input
+        return redirect('/')
+
+    selected_post = Post.query.filter_by(id=post_id).first()
+    if selected_post is None:
+        # Redirect to home page if we couldn't find the correct post
+        return redirect('/')
+
+    return render_template('post.html', post=selected_post)
