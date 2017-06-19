@@ -2,4 +2,15 @@
 
 {% block content %}
 
+    {% if homeworks|length > 0 %}
+        <h2>Select your Homework:</h2>
+        <ul>
+            {% for homework in homeworks %}
+                <li><a href="/homework/{{ homework.id }}">{{ homework.title }}</a></li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <h2>Hmm, we couldn't find any homeworks for this course.</h2>
+    {% endif %}
+
 {% endblock %}

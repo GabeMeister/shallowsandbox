@@ -115,6 +115,7 @@ def delete_post(post_id):
 
     return redirect('/')
 
+
 @app.route('/school/<school_id>')
 def school(school_id):
     if not school_id.isdigit():
@@ -127,3 +128,19 @@ def school(school_id):
         return redirect('/')
 
     return render_template('school.html', courses=selected_school.courses)
+
+
+@app.route('/course/<course_id>')
+def course(course_id):
+    if not course_id.isdigit():
+        # Redirect to home page if garbage input
+        return redirect('/')
+
+    selected_course = Course.query.filter_by(id=course_id).first()
+    if selected_course is None:
+        # Redirect to home page if we couldn't find the correct course
+        return redirect('/')
+
+    print selected_course.homeworks
+
+    return render_template('course.html', homeworks=selected_course.homeworks)

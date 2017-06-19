@@ -99,6 +99,18 @@ def insert_courses():
     print 'Done!'
 
 
+@manager.command
+def insert_homeworks():
+    the_course = Course.query.first()
+    print the_course
+    due_date = datetime.now()
+    new_hw = Homework(title='mastering physics hw 1', course=the_course, due_date=due_date)
+    db.session.add(new_hw)
+    db.session.commit()
+    print 'Done!'
+
+
+
 
 
 if __name__ == "__main__":
