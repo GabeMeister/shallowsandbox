@@ -9,18 +9,20 @@ from shallowsandbox_app import app, db
 from shallowsandbox_app.models.forms import LoginForm, RegisterForm, NewPostForm, EditPostForm
 from shallowsandbox_app.models.user import User
 from shallowsandbox_app.models.post import Post
+from shallowsandbox_app.models.homework import Homework
+from shallowsandbox_app.models.course import Course
+from shallowsandbox_app.models.school import School
 from werkzeug.security import generate_password_hash
 
 
 @app.route('/')
 @app.route('/index')
 def index():
-    name = ''
-    posts = []
-    if current_user.is_authenticated:
-        name = current_user.username
-        posts = Post.query.all()
-    return render_template('index.html', name=name, posts=posts)
+    schools = School.query\
+        .filter(School.full_name.contains('Washington State University'))\
+        .order_by(School.full_name)\
+        .all()
+    return render_template('index.html', schools=schools)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -112,3 +114,16 @@ def delete_post(post_id):
     db.session.commit()
 
     return redirect('/')
+
+@app.route('/school/<school_id>')
+def school(school_id):
+    if not school_id.isdigit():
+        # Redirect to home page if garbage input
+        return redirect('/')
+
+    selected_school = School.query.filter_by(id=school_id).first()
+    if selected_school is None:
+        # Redirect to home page if we couldn't find the correct school
+        return redirect('/')
+
+    return render_template('school.html', courses=selected_school.courses)

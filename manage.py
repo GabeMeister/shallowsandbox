@@ -39,7 +39,7 @@ def select():
 
 
 @manager.command
-def insert():
+def insert_schools():
     college_file_path = '/home/gabe/dev/python/college-generator/college-generator/Accreditation_04_2017.csv'
 
     colleges = set()
@@ -58,16 +58,43 @@ def insert():
 
 
 @manager.command
-def insert_course():
-    hw = db.session.query(Homework).order_by(Homework.id.desc()).first()
-    school = School.query.first()
-    new_course = Course(subject='PHYS',
-                        number=112,
-                        professor_name='John Williams',
-                        course_times='MWF 10:10-11am',
-                        school=school)
-    new_course.homeworks.append(hw)
-    db.session.add(new_course)
+def insert_courses():
+    import random
+    from faker import Faker
+    fake = Faker()
+    subjects = ['MATH', 'PHYS']
+    course_days = ['MWF', 'TTH']
+    course_times = ['8:10am-9am',
+                    '9:10am-10am',
+                    '10:10am-11am',
+                    '11:10am-12pm',
+                    '12:10pm-1pm',
+                    '1:10pm-2pm',
+                    '2:10pm-3pm',
+                    '3:10pm-4pm',
+                    '4:10pm-5pm',
+                    '5:10pm-6pm']
+
+    school = School.query.filter_by(full_name='Washington State University').first()
+
+    for _ in range(1, 20):
+        random_num = random.randint(90, 399)
+        print random_num
+        random_name = fake.name()
+        print random_name
+        random_subject = subjects[random.randint(0, 1)]
+        print random_subject
+        random_day = course_days[random.randint(0, 1)]
+        print random_day
+        random_time = course_times[random.randint(0, len(course_times) - 1)]
+
+        new_course = Course(subject=random_subject,
+                            number=random_num,
+                            professor_name=random_name,
+                            course_times='{0} {1}'.format(random_day, random_time),
+                            school=school)
+        db.session.add(new_course)
+
     db.session.commit()
     print 'Done!'
 

@@ -1,43 +1,32 @@
 {% extends 'base.html' %}
 
 {% block head_scripts %}
-
-    {% if current_user.is_authenticated %}
-        <script type="text/x-mathjax-config">
-            MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
-        </script>
-        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
-        <script src="/static/js/mathjax.js"></script>
-    {% endif %}
-
 {% endblock %}
 
 {% block content %}
 
     {% if not current_user.is_authenticated %}
-        <h1>Welcome! Please sign up or log in to see content</h1>
+        <h1>Welcome!</h1>
     {% else %}
-
-        <h1>Welcome {{ name }}!</h1>
-        <a href="/newpost">New Post</a>
-
-
-        {% for post in posts %}
-            <div class="post">
-                <span>Q: {{ post.question }}</span>
-                <div>A: {{ post.answer }}</div>
-                <a href="/editpost/{{ post.id }}">Edit</a>
-                <a href="/deletepost/{{ post.id }}" class="confirm-link-click">Delete</a>
-            </div>
-        {% endfor %}
-
-
-
-
-
-
-
+        <h1>Welcome {{ current_user.username }}!</h1>
     {% endif %}
+
+
+    <h2>Select your School:</h2>
+    <ul>
+        {% for school in schools %}
+            <li><a href="/school/{{ school.id }}">{{ school.full_name }}</a></li>
+        {% endfor %}
+    </ul>
+
+
+
+
+
+
+
+
+
 
 {% endblock %}
 
