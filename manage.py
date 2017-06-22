@@ -2,6 +2,7 @@
 
 # pylint: disable=C0103,C0111,E1101,W0401,C0301
 
+import os
 import csv
 from datetime import datetime, timedelta
 from flask_script import Manager
@@ -13,6 +14,21 @@ from shallowsandbox_app.models.school import School
 from shallowsandbox_app.models.homework import Homework
 
 manager = Manager(app)
+
+
+@manager.command
+def sandbox():
+    db_datetime = os.path.getmtime('shallowsandbox_app/shallowsandbox.db')
+    trash_datetime = os.path.getmtime('trash.txt')
+    if db_datetime > trash_datetime:
+        print 'database is more recent'
+    else:
+        print 'trash.txt is more recent'
+
+    # school = School.query.filter_by(full_name='Test School').first()
+    # db.session.delete(school)
+    # db.session.commit()
+
 
 
 @manager.command

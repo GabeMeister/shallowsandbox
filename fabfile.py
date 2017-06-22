@@ -1,7 +1,9 @@
 """ fab commands for shallowsandbox.com """
 
-# pylint: disable=C0103,E1129
+# pylint: disable=C0103,E1129,C0301
 
+import os
+import subprocess
 from fabric.api import cd, env, sudo, run, put, get
 # lcd, prompt, local
 # from fabric.contrib.files import exists
@@ -61,7 +63,15 @@ def copy_config():
 
 def deploy_db():
     """ Copy the local sqlite db file (which isn't in source control) to remote """
-    put(local_app_dir + '/shallowsandbox.db', remote_app_dir + '/shallowsandbox.db')
+    with cd(remote_git_dir):
+        remote_db_datetime = int(run("stat -c %X shallowsandbox_app/shallowsandbox.db"))
+        local_db_datetime = int(subprocess.check_output(['stat', '-c', '%X', 'shallowsandbox_app/shallowsandbox.db']))
+
+        if remote_db_datetime > local_db_datetime:
+            print 'Remote db is more recent than local db. Please copy remote db down to local first.'
+        else:
+            print 'Copying local db to remote...'
+            put(local_app_dir + '/shallowsandbox.db', remote_app_dir + '/shallowsandbox.db')
 
 
 def copy_db():
