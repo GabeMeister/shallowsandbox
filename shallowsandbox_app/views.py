@@ -63,12 +63,12 @@ def new_post():
     form = NewPostForm()
     if form.validate_on_submit():
         now = datetime.now()
-        post = Post(question=form.question.data,\
+        the_post = Post(question=form.question.data,\
                     answer=form.answer.data,\
                     creation_date=now,\
                     last_edit_date=now,\
                     user=current_user)
-        db.session.add(post)
+        db.session.add(the_post)
         db.session.commit()
 
         return redirect('/')
@@ -82,8 +82,8 @@ def edit_post(post_id):
         # Redirect to home page if garbage input
         return redirect('/')
 
-    post = Post.query.filter_by(id=post_id).first()
-    if post is None:
+    the_post = Post.query.filter_by(id=post_id).first()
+    if the_post is None:
         # Redirect to home page if we didn't find the correct post
         return redirect('/')
 
@@ -91,28 +91,28 @@ def edit_post(post_id):
 
     # Check if user is initially loading the form
     if request.method == 'GET':
-        form.question.data = post.question
-        form.answer.data = post.answer
+        form.question.data = the_post.question
+        form.answer.data = the_post.answer
 
     if form.validate_on_submit():
-        form.populate_obj(post)
+        form.populate_obj(the_post)
 
         # Don't need db.session.add() here because post was already added
         db.session.commit()
         return redirect('/')
 
-    return render_template('editpost.html', form=form, post=post)
+    return render_template('editpost.html', form=form, post=the_post)
 
 
 @app.route('/deletepost/<post_id>')
 @login_required
 def delete_post(post_id):
-    post = Post.query.filter_by(id=post_id).first()
-    if post is None:
+    the_post = Post.query.filter_by(id=post_id).first()
+    if the_post is None:
         # Redirect to home page if we didn't find the correct post
         return redirect('/')
 
-    db.session.delete(post)
+    db.session.delete(the_post)
     db.session.commit()
 
     return redirect('/')
@@ -145,6 +145,7 @@ def course(course_id):
 
     return render_template('course.html', homeworks=selected_course.homeworks)
 
+
 @app.route('/homework/<homework_id>')
 def homework(homework_id):
     if not homework_id.isdigit():
@@ -157,6 +158,7 @@ def homework(homework_id):
         return redirect('/')
 
     return render_template('homework.html', posts=selected_homework.posts)
+
 
 @app.route('/post/<post_id>')
 def post(post_id):
