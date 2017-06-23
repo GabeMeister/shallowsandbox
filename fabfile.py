@@ -4,8 +4,8 @@
 
 import os
 import subprocess
-from fabric.api import cd, env, sudo, run, put, get
-# lcd, prompt, local
+from fabric.api import cd, env, sudo, run, put, get, abort, local
+# lcd, prompt
 # from fabric.contrib.files import exists
 
 
@@ -37,17 +37,52 @@ env.key_filename = '/home/gabe/servers/prod/ssh_keys/prod_key'
 ### tasks ###
 #############
 
-def deploy():
+def setup_release():
+    """ Set up a new tag to deploy """
+    # Check we are on master branch
+    output = local('git status', capture=True)
+    if 'On branch master' not in output:
+        abort('Checkout master branch and run again')
+
+    # Get a new release tag
+    new_tag = str(int(local('git describe --abbrev=0', capture=True)) + 1)
+
+    # Create and push new tag
+    local('git tag -a {0} -m "Release version {0}"'.format(new_tag))
+    local('git push origin {0}'.format(new_tag))
+
+
+def deploy(tag=''):
     """
-    1. Git fetch and pull on remote repo
-    2. Install any new pip requirements
-    3. Restart gunicorn via supervisor
+    1. Run git fetch
+    2. Run checkout on specified tag
+    3. Install any new pip requirements
+    4. Restart gunicorn via supervisor
     """
+    # Check if user specified a tag
+    if tag == '':
+        abort('Specify a git tag to deploy')
+
+    # Check if tag exists in git remotely
+    output = local('git ls-remote origin refs/tags/{0}'.format(tag), capture=True)
+    if output == '':
+        abort('Tag does not exist on remote')
+
+    # Actually deploy tag
     with cd(remote_git_dir):
-        run('ssh-agent bash -c \'ssh-add /home/gabe/deploy_key/deploy_key; git fetch\'')
-        run('ssh-agent bash -c \'ssh-add /home/gabe/deploy_key/deploy_key; git pull\'')
+        run('ssh-agent bash -c \'ssh-add /home/gabe/deploy_key/deploy_key; git fetch --quiet\'')
+        run('ssh-agent bash -c \'ssh-add /home/gabe/deploy_key/deploy_key; git checkout {0}\''.format(tag))
+        output = run('git status')
+        if 'git pull' in output:
+            run('ssh-agent bash -c \'ssh-add /home/gabe/deploy_key/deploy_key; git pull\'')
+
+        # pip requirements may have changed, so update that
         run(remote_pip + ' install -r requirements.txt')
+
+        # Upgrade the database to the latest
         upgrade_alembic_head()
+
+        # Restart web app
         sudo('supervisorctl restart shallowsandbox')
 
 
