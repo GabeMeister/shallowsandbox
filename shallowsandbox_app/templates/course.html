@@ -1,12 +1,11 @@
 {% extends 'base.html' %}
 
 {% block content %}
-
     {% if homeworks|length > 0 %}
         <h2>Select your Homework:</h2>
         <ul>
             {% for homework in homeworks %}
-                <li><a href="/homework/{{ homework.id }}">{{ homework.title }}</a></li>
+                <li><a href="{{ url_for('homework', homework_id=homework.id) }}">{{ homework.title }}</a></li>
             {% endfor %}
         </ul>
     {% else %}

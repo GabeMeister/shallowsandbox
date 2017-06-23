@@ -1,12 +1,11 @@
 {% extends 'base.html' %}
 
 {% block content %}
-
     {% if courses|length > 0 %}
         <h2>Select your Class:</h2>
         <ul>
             {% for course in courses %}
-                <li><a href="/course/{{ course.id }}">{{ course.subject }} {{ course.number }}</a></li>
+                <li><a href="{{ url_for('course', course_id=course.id) }}">{{ course.subject }} {{ course.number }}</a></li>
             {% endfor %}
         </ul>
     {% else %}

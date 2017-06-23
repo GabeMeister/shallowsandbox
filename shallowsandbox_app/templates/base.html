@@ -10,7 +10,6 @@
 </head>
 
 <body>
-
     <div class="body-content">
         <span>Menu:</span>
         <a href="/index">Home</a>
@@ -20,6 +19,13 @@
             <a href="/login">Log In</a>
             <a href="/signup">Sign Up</a>
         {% endif %}
+
+        <div>
+            {% for breadcrumb in breadcrumbs %}
+                <a href="{{ breadcrumb.url }}">{{ breadcrumb.text }}</a>
+                {{ '>' if not loop.last }}
+            {% endfor %}
+        </div>
 
         {% block content %}
         {% endblock %}

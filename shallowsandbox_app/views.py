@@ -1,7 +1,8 @@
 """ Define the views """
 
-# pylint: disable=C0103,C0111,E1101
+# pylint: disable=C0103,C0111,E1101,C0301
 
+import shallowsandbox_app.breadcrumbs as breadcrumbs
 from datetime import datetime
 from flask import render_template, redirect, request
 from flask_login import login_required, login_user, logout_user, current_user
@@ -75,13 +76,9 @@ def new_post():
     return render_template('newpost.html', form=form)
 
 
-@app.route('/editpost/<post_id>', methods=['GET', 'POST'])
+@app.route('/editpost/<int:post_id>', methods=['GET', 'POST'])
 @login_required
 def edit_post(post_id):
-    if not post_id.isdigit():
-        # Redirect to home page if garbage input
-        return redirect('/')
-
     the_post = Post.query.filter_by(id=post_id).first()
     if the_post is None:
         # Redirect to home page if we didn't find the correct post
@@ -104,7 +101,7 @@ def edit_post(post_id):
     return render_template('editpost.html', form=form, post=the_post)
 
 
-@app.route('/deletepost/<post_id>')
+@app.route('/deletepost/<int:post_id>')
 @login_required
 def delete_post(post_id):
     the_post = Post.query.filter_by(id=post_id).first()
@@ -118,57 +115,51 @@ def delete_post(post_id):
     return redirect('/')
 
 
-@app.route('/school/<school_id>')
+@app.route('/school/<int:school_id>')
 def school(school_id):
-    if not school_id.isdigit():
-        # Redirect to home page if garbage input
-        return redirect('/')
-
     selected_school = School.query.filter_by(id=school_id).first()
     if selected_school is None:
         # Redirect to home page if we couldn't find the correct school
         return redirect('/')
 
-    return render_template('school.html', courses=selected_school.courses)
+    # Build breadcrumb navigation
+    school_breadcrumbs = breadcrumbs.school_breadcrumb_path()
+
+    return render_template('school.html', school_id=selected_school.id, courses=selected_school.courses, breadcrumbs=school_breadcrumbs)
 
 
-@app.route('/course/<course_id>')
+@app.route('/course/<int:course_id>')
 def course(course_id):
-    if not course_id.isdigit():
-        # Redirect to home page if garbage input
-        return redirect('/')
-
     selected_course = Course.query.filter_by(id=course_id).first()
     if selected_course is None:
         # Redirect to home page if we couldn't find the correct course
         return redirect('/')
 
-    return render_template('course.html', homeworks=selected_course.homeworks)
+    # Build up course breadcrumb navigation
+    course_breadcrumbs = breadcrumbs.course_breadcrumb_path()
+
+    return render_template('course.html', homeworks=selected_course.homeworks, breadcrumbs=course_breadcrumbs)
 
 
-@app.route('/homework/<homework_id>')
+@app.route('/homework/<int:homework_id>')
 def homework(homework_id):
-    if not homework_id.isdigit():
-        # Redirect to home page if garbage input
-        return redirect('/')
-
     selected_homework = Homework.query.filter_by(id=homework_id).first()
     if selected_homework is None:
         # Redirect to home page if we couldn't find the correct homework
         return redirect('/')
 
-    return render_template('homework.html', posts=selected_homework.posts)
+    homework_breadcrumbs = breadcrumbs.homework_breadcrumb_path()
+
+    return render_template('homework.html', posts=selected_homework.posts, breadcrumbs=homework_breadcrumbs)
 
 
-@app.route('/post/<post_id>')
+@app.route('/post/<int:post_id>')
 def post(post_id):
-    if not post_id.isdigit():
-        # Redirect to home page if garbage input
-        return redirect('/')
-
     selected_post = Post.query.filter_by(id=post_id).first()
     if selected_post is None:
         # Redirect to home page if we couldn't find the correct post
         return redirect('/')
 
-    return render_template('post.html', post=selected_post)
+    post_breadcrumbs = breadcrumbs.post_breadcrumb_path()
+
+    return render_template('post.html', post=selected_post, breadcrumbs=post_breadcrumbs)
