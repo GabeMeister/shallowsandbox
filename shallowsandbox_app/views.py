@@ -5,6 +5,7 @@
 from datetime import datetime
 from flask import render_template, redirect, request
 from flask_login import login_required, login_user, logout_user, current_user
+from sqlalchemy import or_
 from shallowsandbox_app import app, db
 from shallowsandbox_app.models.forms import LoginForm, RegisterForm, NewPostForm, EditPostForm
 from shallowsandbox_app.models.user import User
@@ -19,7 +20,8 @@ from werkzeug.security import generate_password_hash
 @app.route('/index')
 def index():
     schools = School.query\
-        .filter(School.full_name.contains('Washington State University'))\
+        .filter(or_(School.full_name == 'Test School',\
+                    School.full_name == 'Washington State University'))\
         .order_by(School.full_name)\
         .all()
     return render_template('index.html', schools=schools)

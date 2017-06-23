@@ -56,18 +56,22 @@ def select():
 
 @manager.command
 def insert_schools():
-    college_file_path = '/home/gabe/dev/python/college-generator/college-generator/Accreditation_04_2017.csv'
+    # college_file_path = '/home/gabe/dev/python/college-generator/college-generator/Accreditation_04_2017.csv'
 
-    colleges = set()
-    with open(college_file_path, 'rb') as csvfile:
-        reader = csv.reader(csvfile, delimiter=',', quotechar='"')
-        for row in reader:
-            colleges.add(row[1])
+    # colleges = set()
+    # with open(college_file_path, 'rb') as csvfile:
+    #     reader = csv.reader(csvfile, delimiter=',', quotechar='"')
+    #     for row in reader:
+    #         colleges.add(row[1])
 
-    for college_name in colleges:
-        new_school = School(full_name=college_name)
-        db.session.add(new_school)
+    # for college_name in colleges:
+    #     new_school = School(full_name=college_name)
+    #     db.session.add(new_school)
 
+    # db.session.commit()
+
+    new_school = School(full_name='Test School')
+    db.session.add(new_school)
     db.session.commit()
 
     print 'Done!'
