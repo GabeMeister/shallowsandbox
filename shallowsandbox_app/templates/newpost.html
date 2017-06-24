@@ -15,7 +15,7 @@
 
 {% block content %}
 
-    <form action="/newpost" method="post">
+    <form action="{{ url_for('new_post', homework_id=homework_id) }}" method="post">
         {{ form.hidden_tag() }}
 
         <h1>Create a New Post:</h1>
@@ -46,6 +46,7 @@
 
 
         <br>
+        <!--<input type='hidden' value='{{ homework_id }}' name='homework_id'/>-->
         <input type='submit' value='Submit!'/>
     </form>
 

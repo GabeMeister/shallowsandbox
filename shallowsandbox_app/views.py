@@ -4,7 +4,7 @@
 
 import shallowsandbox_app.breadcrumbs as breadcrumbs
 from datetime import datetime
-from flask import render_template, redirect, request
+from flask import render_template, redirect, request, url_for
 from flask_login import login_required, login_user, logout_user, current_user
 from sqlalchemy import or_
 from shallowsandbox_app import app, db
@@ -61,24 +61,36 @@ def logout():
 @app.route('/newpost', methods=['GET', 'POST'])
 @login_required
 def new_post():
+    homework_id = request.args['homework_id']
+
     form = NewPostForm()
     if form.validate_on_submit():
+        hw = Homework.query.filter_by(id=homework_id).first()
+        if homework is None:
+            return redirect('/')
+
         now = datetime.now()
         the_post = Post(question=form.question.data,\
                     answer=form.answer.data,\
                     creation_date=now,\
                     last_edit_date=now,\
-                    user=current_user)
+                    user=current_user,\
+                    homework=hw)
         db.session.add(the_post)
         db.session.commit()
 
-        return redirect('/')
-    return render_template('newpost.html', form=form)
+        return redirect(url_for('post', post_id=the_post.id))
+    return render_template('newpost.html', form=form, homework_id=homework_id)
 
 
 @app.route('/editpost/<int:post_id>', methods=['GET', 'POST'])
 @login_required
 def edit_post(post_id):
+    # Make sure user is admin
+    if not current_user.is_admin:
+        return redirect('/')
+
+    homework_id = request.args['homework_id']
     the_post = Post.query.filter_by(id=post_id).first()
     if the_post is None:
         # Redirect to home page if we didn't find the correct post
@@ -96,14 +108,19 @@ def edit_post(post_id):
 
         # Don't need db.session.add() here because post was already added
         db.session.commit()
-        return redirect('/')
+        return redirect(url_for('post', post_id=post_id))
 
-    return render_template('editpost.html', form=form, post=the_post)
+    return render_template('editpost.html', form=form, post=the_post, homework_id=homework_id)
 
 
 @app.route('/deletepost/<int:post_id>')
 @login_required
 def delete_post(post_id):
+    # Make sure user is admin
+    if not current_user.is_admin:
+        return redirect('/')
+
+    homework_id = request.args['homework_id']
     the_post = Post.query.filter_by(id=post_id).first()
     if the_post is None:
         # Redirect to home page if we didn't find the correct post
@@ -112,7 +129,7 @@ def delete_post(post_id):
     db.session.delete(the_post)
     db.session.commit()
 
-    return redirect('/')
+    return redirect(url_for('homework', homework_id=homework_id))
 
 
 @app.route('/school/<int:school_id>')
@@ -150,7 +167,7 @@ def homework(homework_id):
 
     homework_breadcrumbs = breadcrumbs.homework_breadcrumb_path()
 
-    return render_template('homework.html', posts=selected_homework.posts, breadcrumbs=homework_breadcrumbs)
+    return render_template('homework.html', posts=selected_homework.posts, homework=selected_homework, breadcrumbs=homework_breadcrumbs)
 
 
 @app.route('/post/<int:post_id>')

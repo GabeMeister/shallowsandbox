@@ -92,7 +92,6 @@ def post_breadcrumb(selected_post):
     max_length = 40
     question_text = selected_post.question
     if len(question_text) > max_length:
-        print 'here'
         question_text = question_text[:max_length] + '...'
 
     return {
