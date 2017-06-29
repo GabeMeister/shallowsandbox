@@ -22,6 +22,9 @@ class Homework(db.Model):
 
     def info(self):
         buf = self.title + '\n'
+        buf += 'Due Date: ' + str(self.due_date) + '\n'
+        if not self.course is None:
+            buf += 'Course: {0} {1}'.format(self.course.subject, self.course.number)
         buf += 'Posts:\n'
         for post in self.posts:
             buf += str(post) + '\n'

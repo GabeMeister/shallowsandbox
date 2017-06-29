@@ -8,7 +8,8 @@ from flask import render_template, redirect, request, url_for
 from flask_login import login_required, login_user, logout_user, current_user
 from sqlalchemy import or_
 from shallowsandbox_app import app, db
-from shallowsandbox_app.models.forms import LoginForm, RegisterForm, NewPostForm, EditPostForm
+from shallowsandbox_app.models.forms import LoginForm, RegisterForm, NewPostForm,\
+    EditPostForm, NewHomeworkForm
 from shallowsandbox_app.models.user import User
 from shallowsandbox_app.models.post import Post
 from shallowsandbox_app.models.homework import Homework
@@ -58,6 +59,28 @@ def logout():
     return redirect('/')
 
 
+@app.route('/newhomework', methods=['GET', 'POST'])
+@login_required
+def new_homework():
+    course_id = request.args['course_id']
+    the_course = Course.query.filter_by(id=course_id).first()
+    if the_course is None:
+        return redirect('/')
+
+    form = NewHomeworkForm()
+    if form.validate_on_submit():
+        new_hw = Homework()
+        form.populate_obj(new_hw)
+        new_hw.course = the_course
+
+        db.session.add(new_hw)
+        db.session.commit()
+
+        return redirect(url_for('course', course_id=course_id))
+
+    return render_template('newhomework.html', form=form, course_id=course_id)
+
+
 @app.route('/newpost', methods=['GET', 'POST'])
 @login_required
 def new_post():
@@ -80,6 +103,7 @@ def new_post():
         db.session.commit()
 
         return redirect(url_for('post', post_id=the_post.id))
+
     return render_template('newpost.html', form=form, homework_id=homework_id)
 
 
@@ -155,7 +179,7 @@ def course(course_id):
     # Build up course breadcrumb navigation
     course_breadcrumbs = breadcrumbs.course_breadcrumb_path()
 
-    return render_template('course.html', homeworks=selected_course.homeworks, breadcrumbs=course_breadcrumbs)
+    return render_template('course.html', homeworks=selected_course.homeworks, course_id=selected_course.id, breadcrumbs=course_breadcrumbs)
 
 
 @app.route('/homework/<int:homework_id>')

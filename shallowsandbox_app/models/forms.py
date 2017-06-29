@@ -5,6 +5,7 @@
 from shallowsandbox_app.models.user import User
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField
+from wtforms.ext.dateutil.fields import DateTimeField
 from wtforms.validators import InputRequired, Length, Email, EqualTo
 from werkzeug.security import check_password_hash
 
@@ -92,10 +93,20 @@ class NewPostForm(FlaskForm):
         InputRequired(message='Please enter an answer')
     ])
 
+
 class EditPostForm(FlaskForm):
     question = TextAreaField('Edit Question:', validators=[
         InputRequired(message='Please enter a question')
     ])
     answer = TextAreaField('Edit Answer:', validators=[
         InputRequired(message='Please enter an answer')
+    ])
+
+
+class NewHomeworkForm(FlaskForm):
+    title = StringField('Homework Title:', validators=[
+        InputRequired(message='Please enter a title')
+    ])
+    due_date = DateTimeField('Due Date:', display_format='%Y-%m-%d %H:%M', validators=[
+        InputRequired(message='Please enter a due date')
     ])
