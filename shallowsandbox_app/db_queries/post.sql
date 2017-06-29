@@ -1,12 +1,18 @@
-select * from user;
+select  from user;
+
+select * from course;
+update course set number=202 where id=1;
 
 update user set is_admin=1 where id=1;
 
+
 select * from post;
+update post set homework_id=1;
 delete from post where id in (11);
 
 
 select * from homework;
+update homework set title='Mastering Physics HW 1';
 
 select * from school where id=1657;
 
